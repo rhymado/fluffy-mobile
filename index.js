@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import {AppRegistry, Platform} from 'react-native';
+import {AppRegistry} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
 import {Provider} from 'react-redux';
@@ -7,6 +7,7 @@ import {PersistGate} from 'redux-persist/integration/react';
 import PushNotification from 'react-native-push-notification';
 
 import Store, {persistedStore} from './src/redux/store';
+import {handleShowNotification} from './src/utils/notification';
 
 // notification configuration
 PushNotification.configure({
@@ -17,6 +18,11 @@ PushNotification.configure({
   // (required) Called when a remote is received or opened, or local notification is opened
   onNotification: function (notification) {
     console.log('NOTIFICATION:', notification);
+    handleShowNotification(notification.message, notification.title, {
+      bigPictureUrl: notification.bigPictureUrl,
+      largeIconUrl: notification.largeIconUrl,
+      smallIcon: notification.largeIconUrl,
+    });
   },
 
   // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
@@ -41,7 +47,7 @@ PushNotification.configure({
    * - if you are not using remote notification or do not have Firebase installed, use this:
    *     requestPermissions: Platform.OS === 'ios'
    */
-  requestPermissions: Platform.OS === 'ios',
+  requestPermissions: true,
 });
 
 // create channel for notification
